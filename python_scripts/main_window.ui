@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>558</width>
+    <height>495</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QListWidget" name="listWidget">
+       <property name="contextMenuPolicy">
+        <enum>Qt::ActionsContextMenu</enum>
+       </property>
+      </widget>
+      <widget class="QGroupBox" name="groupBox_settings">
+       <property name="title">
+        <string>настройки:</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QCheckBox" name="checkBox_load_last_anamation">
+          <property name="text">
+           <string>Авто загрузка последний анимации</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox_enable_auto_save">
+          <property name="text">
+           <string>Разрешить автосохранение анимации</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox_enable_config_modification">
+          <property name="text">
+           <string>Разрешить модификацию конфига</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox_enable_servo">
+          <property name="text">
+           <string>Разрешить работу с манипулятором</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTabWidget" name="tab">
+          <property name="currentIndex">
+           <number>-1</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_speed">
+        <property name="minimum">
+         <double>-10.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>100.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_start_stop">
+        <property name="text">
+         <string>Пуск</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="frame_time_settings">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QDoubleSpinBox" name="spinBox_cur_time">
+           <property name="decimals">
+            <number>4</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="horizontalSlider_cur_time">
+           <property name="maximum">
+            <number>1000</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="spinBox_max_time">
+           <property name="decimals">
+            <number>4</number>
+           </property>
+           <property name="maximum">
+            <double>10000000.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>1.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>558</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuAfqk">
+    <property name="title">
+     <string>Файл</string>
+    </property>
+    <addaction name="action_save_as"/>
+    <addaction name="action_load"/>
+    <addaction name="action_save"/>
+   </widget>
+   <addaction name="menuAfqk"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="action_save_as">
+   <property name="text">
+    <string>Сохранить как</string>
+   </property>
+  </action>
+  <action name="action_load">
+   <property name="text">
+    <string>Открыть</string>
+   </property>
+  </action>
+  <action name="action_save">
+   <property name="text">
+    <string>Сохранить</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="action_remove">
+   <property name="text">
+    <string>удлить</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
+  </action>
+  <action name="action_create">
+   <property name="text">
+    <string>создать</string>
+   </property>
+   <property name="shortcut">
+    <string>Return</string>
+   </property>
+  </action>
+  <action name="action_copy">
+   <property name="text">
+    <string>копировать</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="action_insert">
+   <property name="text">
+    <string>вставить</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="actionAction_save_ranges">
+   <property name="text">
+    <string>action_save_ranges</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
