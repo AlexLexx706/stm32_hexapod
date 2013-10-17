@@ -8,13 +8,16 @@
 struct ServoData
 {
 	//минимальное время, значение в отсчётах с учётом прескеллера
-	uint16_t min_time;
+	float min_time;
 
 	//минимальное время, значение в отсчётах с учётом прескеллера
-	uint16_t max_time;
+	float max_time;
 
 	//текущее значение сервы
-	uint16_t time_value;
+	float cur_time;
+
+	//значение для таймера
+	uint16_t timer_value;
 };
 
 struct GroupData
@@ -25,8 +28,11 @@ struct GroupData
     //переод шима
     float period;
 
+    float angle_step;
+
     //разрешение серв.
     uint16_t resolution;
+
 
 	//настройки сервы.
     struct ServoData servos[SERVOS_COUNT_IN_GROUP];
@@ -41,10 +47,10 @@ struct GroupsData
 
 struct ServoRange
 {
-    //минимальное время в миллисекундах
+    //минимальное время в cекундах
     float min_time;
 
-    //минимальное время в миллисекундах
+    //минимальное время в cекундах
     float max_time;
 };
 

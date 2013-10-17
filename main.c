@@ -162,10 +162,10 @@ void TIM1_UP_TIM16_IRQHandler(void)
     if (TIM_GetITStatus(TIM1, TIM_IT_Update) != RESET)
     {
         TIM_ClearITPendingBit(TIM1, TIM_IT_Update);
-        TIM_SetCompare1(TIM1, servos_data.group[0].servos[0].time_value);
-        TIM_SetCompare2(TIM1, servos_data.group[0].servos[1].time_value);
-        TIM_SetCompare3(TIM1, servos_data.group[0].servos[2].time_value);
-        TIM_SetCompare4(TIM1, servos_data.group[0].servos[3].time_value);
+        TIM_SetCompare1(TIM1, servos_data.group[0].servos[0].timer_value);
+        TIM_SetCompare2(TIM1, servos_data.group[0].servos[1].timer_value);
+        TIM_SetCompare3(TIM1, servos_data.group[0].servos[2].timer_value);
+        TIM_SetCompare4(TIM1, servos_data.group[0].servos[3].timer_value);
 
         //отключим прерывание.
         TIM_ITConfig(TIM1, TIM_IT_Update, DISABLE);
@@ -178,10 +178,10 @@ void TIM2_IRQHandler(void)
     if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET)
     {
         TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
-        TIM_SetCompare1(TIM2, servos_data.group[1].servos[0].time_value);
-        TIM_SetCompare2(TIM2, servos_data.group[1].servos[1].time_value);
-        TIM_SetCompare3(TIM2, servos_data.group[1].servos[3].time_value);
-        TIM_SetCompare4(TIM2, servos_data.group[1].servos[2].time_value);
+        TIM_SetCompare1(TIM2, servos_data.group[1].servos[0].timer_value);
+        TIM_SetCompare2(TIM2, servos_data.group[1].servos[1].timer_value);
+        TIM_SetCompare3(TIM2, servos_data.group[1].servos[3].timer_value);
+        TIM_SetCompare4(TIM2, servos_data.group[1].servos[2].timer_value);
         TIM_ITConfig(TIM2, TIM_IT_Update, DISABLE);
     }
 }
@@ -194,10 +194,10 @@ void TIM3_IRQHandler(void)
     if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET)
     {
         TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
-        TIM_SetCompare1(TIM3, servos_data.group[2].servos[0].time_value);
-        TIM_SetCompare2(TIM3, servos_data.group[2].servos[1].time_value);
-        TIM_SetCompare3(TIM3, servos_data.group[2].servos[2].time_value);
-        TIM_SetCompare4(TIM3, servos_data.group[2].servos[3].time_value);
+        TIM_SetCompare1(TIM3, servos_data.group[2].servos[0].timer_value);
+        TIM_SetCompare2(TIM3, servos_data.group[2].servos[1].timer_value);
+        TIM_SetCompare3(TIM3, servos_data.group[2].servos[2].timer_value);
+        TIM_SetCompare4(TIM3, servos_data.group[2].servos[3].timer_value);
         TIM_ITConfig(TIM3, TIM_IT_Update, DISABLE);
     }
 }
@@ -208,10 +208,10 @@ void TIM4_IRQHandler(void)
     if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET)
     {
         TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
-        TIM_SetCompare1(TIM4, servos_data.group[3].servos[0].time_value);
-        TIM_SetCompare2(TIM4, servos_data.group[3].servos[1].time_value);
-        TIM_SetCompare3(TIM4, servos_data.group[3].servos[2].time_value);
-        TIM_SetCompare4(TIM4, servos_data.group[3].servos[3].time_value);
+        TIM_SetCompare1(TIM4, servos_data.group[3].servos[0].timer_value);
+        TIM_SetCompare2(TIM4, servos_data.group[3].servos[1].timer_value);
+        TIM_SetCompare3(TIM4, servos_data.group[3].servos[2].timer_value);
+        TIM_SetCompare4(TIM4, servos_data.group[3].servos[3].timer_value);
         TIM_ITConfig(TIM4, TIM_IT_Update, DISABLE);
     }
 }

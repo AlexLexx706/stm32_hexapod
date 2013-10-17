@@ -45,15 +45,13 @@ void init_servo_data(struct GroupsData * groups_data)
     //2. инициализация таймеров.
     float min_time = 0.00045;
     float max_time = 0.0030;
+    float duration = max_time - min_time;
+    float middle_time = min_time + duration / 2.f;
     uint16_t resolution = 180;
     float period = 0.02;
-    float angle_step = (max_time - min_time) / resolution;
+    float angle_step = duration / resolution;
 
-    uint16_t s_min_time = (uint16_t)(min_time / angle_step);
-    uint16_t s_max_time = (uint16_t)(max_time / angle_step);
-	uint16_t time_value = s_min_time + (s_max_time - s_min_time) / 2;
-
-	struct GroupData * begin_group = groups_data->group;
+    struct GroupData * begin_group = groups_data->group;
     struct GroupData * end_group = &groups_data->group[GROUPS_COUNT];
 
     struct ServoData * servo_begin;
@@ -64,15 +62,17 @@ void init_servo_data(struct GroupsData * groups_data)
     {
     	begin_group->period = period;
     	begin_group->resolution = resolution;
+    	begin_group->angle_step = angle_step;
 
     	servo_begin = begin_group->servos;
     	servo_end = &begin_group->servos[SERVOS_COUNT_IN_GROUP];
 
     	for (; servo_begin < servo_end; servo_begin++ )
     	{
-    		servo_begin->min_time = s_min_time;
-    		servo_begin->max_time = s_max_time;
-    		servo_begin->time_value = time_value;
+    		servo_begin->min_time = min_time;
+    		servo_begin->max_time = max_time;
+    		servo_begin->cur_time = middle_time;
+    		servo_begin->timer_value = servo_begin->cur_time / begin_group->angle_step;
     	}
     }
 
@@ -90,6 +90,7 @@ void init_servo_data(struct GroupsData * groups_data)
 
     TIM_TimeBaseInitTypeDef base_timer;
     TIM_TimeBaseStructInit(&base_timer);
+
     base_timer.TIM_Prescaler = (uint16_t)(angle_step / (1. / SystemCoreClock));
     base_timer.TIM_Period = (uint16_t)(period / angle_step);
 
@@ -105,7 +106,7 @@ void init_servo_data(struct GroupsData * groups_data)
     TIM_OCInitTypeDef timer_oc;
     TIM_OCStructInit(&timer_oc);
 
-    timer_oc.TIM_Pulse = time_value;
+    timer_oc.TIM_Pulse = middle_time / angle_step;
     timer_oc.TIM_OCMode = TIM_OCMode_PWM1;
     timer_oc.TIM_OutputState = TIM_OutputState_Enable;
 
@@ -192,8 +193,8 @@ int set_servo_range(struct GroupsData * groups_data, const struct GroupSettings 
     struct GroupData * group_data = &groups_data->group[group_settings->group_id];
     group_data->period = group_settings->period;
     group_data->resolution = group_settings->resolution;
+    group_data->angle_step = min_range / group_data->resolution;
 
-    float angle_step = min_range / group_data->resolution;
     float old_value;
 
     struct ServoData * begin_servo = group_data->servos;
@@ -205,21 +206,22 @@ int set_servo_range(struct GroupsData * groups_data, const struct GroupSettings 
     //2. установка параметров.
     for (; begin_servo < end_servo; begin_servo++, range++)
     {
-    	old_value = (begin_servo->time_value - begin_servo->min_time) /
-    				(float)(begin_servo->max_time - begin_servo->min_time);
+    	old_value = (begin_servo->cur_time - begin_servo->min_time) /
+    				(begin_servo->max_time - begin_servo->min_time);
 
         cur_range = (range->max_time - range->min_time);
 
-        begin_servo->min_time = range->min_time / angle_step;
-        begin_servo->max_time = range->max_time / angle_step;
-        begin_servo->time_value = begin_servo->min_time + (cur_range / angle_step) * old_value;
+        begin_servo->min_time = range->min_time;
+        begin_servo->max_time = range->max_time;
+        begin_servo->cur_time = begin_servo->min_time + cur_range * old_value;
+        begin_servo->timer_value = begin_servo->cur_time / group_data->angle_step;
     }
 
     //3. Установка параметров таймера.
     TIM_TimeBaseInitTypeDef base_timer;
     TIM_TimeBaseStructInit(&base_timer);
-    base_timer.TIM_Prescaler = (uint16_t)(angle_step / (1. / SystemCoreClock));
-    base_timer.TIM_Period = (uint16_t)(group_data->period / angle_step);
+    base_timer.TIM_Prescaler = (uint16_t)(group_data->angle_step / (1. / SystemCoreClock));
+    base_timer.TIM_Period = (uint16_t)(group_data->period / group_data->angle_step);
 
     if (group_settings->group_id == 0)
     {
@@ -267,14 +269,12 @@ int get_servo_range(const struct GroupsData * groups_data, int group_id, struct 
     	cur_timer = TIM4;
 
 	int i = 0;
-	float k = cur_timer->PSC / (float)SystemCoreClock;
 
 	for (; i < SERVOS_COUNT_IN_GROUP; i++ )
 	{
-		group_settings->ranges[i].min_time =  group_data->servos[i].min_time * k;
-		group_settings->ranges[i].max_time =  group_data->servos[i].max_time * k;
+		group_settings->ranges[i].min_time =  group_data->servos[i].min_time;
+		group_settings->ranges[i].max_time =  group_data->servos[i].max_time;
 	}
-
 	return 0;
 }
 
@@ -297,9 +297,9 @@ int set_servo_angle(struct GroupsData * groups_data, const struct ServoPosData *
 	struct GroupData * group_data = &groups_data->group[servo_pos_data->group_id];
 
 
-	group_data->servos[servo_pos_data->number].time_value = group_data->servos[servo_pos_data->number].min_time +
-			(group_data->servos[servo_pos_data->number].max_time -
-					group_data->servos[servo_pos_data->number].min_time) * servo_pos_data->value;
+	struct ServoData * servo_data = &group_data->servos[servo_pos_data->number];
+	servo_data->cur_time = servo_data->min_time + (servo_data->max_time - servo_data->min_time) * servo_pos_data->value;
+	servo_data->timer_value = servo_data->cur_time / group_data->angle_step;
 
 	if (servo_pos_data->group_id == 0)
     	TIM_ITConfig(TIM1, TIM_IT_Update, ENABLE);

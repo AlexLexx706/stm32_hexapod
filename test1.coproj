@@ -76,11 +76,11 @@
     <Component id="456" name="TIM" path="" type="2"/>
     <Component id="458" name="USART" path="" type="2"/>
     <Component id="464" name="CMSIS Boot" path="" type="2"/>
-    <Component id="477" name="CoX.Peripheral.STM32F1xx.xStartup" path="" type="2"/>
-    <Component id="478" name="CoX.Peripheral.STM32F1xx.xLowLayer" path="" type="2"/>
-    <Component id="479" name="CoX.Peripheral.STM32F1xx.xSysCtl" path="" type="2"/>
-    <Component id="480" name="CoX.Peripheral.STM32F1xx.xCORE" path="" type="2"/>
-    <Component id="481" name="CoX.Peripheral.STM32F1xx.xGPIO" path="" type="2"/>
+    <Component id="477" name="xStartup" path="" type="2"/>
+    <Component id="478" name="xLowLayer" path="" type="2"/>
+    <Component id="479" name="xSysCtl" path="" type="2"/>
+    <Component id="480" name="xCORE" path="" type="2"/>
+    <Component id="481" name="xGPIO" path="" type="2"/>
   </Components>
   <Files>
     <File name="cmsis_boot/startup/startup_stm32f10x_md_vl.c" path="cmsis_boot/startup/startup_stm32f10x_md_vl.c" type="1"/>
