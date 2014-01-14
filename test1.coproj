@@ -12,6 +12,7 @@
           <Define name="STM32F100RB"/>
           <Define name="STM32F10X_MD_VL"/>
           <Define name="USE_STDPERIPH_DRIVER"/>
+          <Define name="__ASSEMBLY__"/>
         </DefinedSymbols>
       </Compile>
       <Link useDefault="0">
@@ -66,85 +67,48 @@
     <ExcludeFile/>
   </Target>
   <Components path="./">
-    <Component id="30" name="C Library" path="" type="2"/>
-    <Component id="31" name="Retarget printf" path="" type="2"/>
     <Component id="50" name="CMSIS core" path="" type="2"/>
     <Component id="440" name="RCC" path="" type="2"/>
-    <Component id="441" name="CRC" path="" type="2"/>
     <Component id="444" name="GPIO" path="" type="2"/>
     <Component id="445" name="EXTI" path="" type="2"/>
+    <Component id="452" name="SPI" path="" type="2"/>
     <Component id="456" name="TIM" path="" type="2"/>
     <Component id="458" name="USART" path="" type="2"/>
     <Component id="464" name="CMSIS Boot" path="" type="2"/>
-    <Component id="477" name="xStartup" path="" type="2"/>
-    <Component id="478" name="xLowLayer" path="" type="2"/>
-    <Component id="479" name="xSysCtl" path="" type="2"/>
-    <Component id="480" name="xCORE" path="" type="2"/>
-    <Component id="481" name="xGPIO" path="" type="2"/>
   </Components>
   <Files>
-    <File name="cmsis_boot/startup/startup_stm32f10x_md_vl.c" path="cmsis_boot/startup/startup_stm32f10x_md_vl.c" type="1"/>
-    <File name="CoX/CoX_Peripheral/inc/xhw_spi.h" path="CoX/CoX_Peripheral/inc/xhw_spi.h" type="1"/>
-    <File name="CoX/CoX_Peripheral/src" path="" type="2"/>
-    <File name="CoX/CoX_Peripheral/inc/xhw_config.h" path="CoX/CoX_Peripheral/inc/xhw_config.h" type="1"/>
-    <File name="syscalls.c" path="syscalls/syscalls.c" type="1"/>
-    <File name="stm_lib/inc/stm32f10x_tim.h" path="stm_lib/inc/stm32f10x_tim.h" type="1"/>
-    <File name="cmsis_boot" path="" type="2"/>
-    <File name="CoX/CoX_Peripheral/src/xcore.c" path="CoX/CoX_Peripheral/src/xcore.c" type="1"/>
-    <File name="servo_controll/servo_controll.c" path="servo_controll/servo_controll.c" type="1"/>
-    <File name="CoX/CoX_Peripheral/inc/xgpio.h" path="CoX/CoX_Peripheral/inc/xgpio.h" type="1"/>
-    <File name="stm_lib/src/stm32f10x_tim.c" path="stm_lib/src/stm32f10x_tim.c" type="1"/>
-    <File name="cmsis_boot/startup" path="" type="2"/>
-    <File name="common.h" path="common.h" type="1"/>
-    <File name="CoX/CoX_Peripheral/inc/xhw_wdt.h" path="CoX/CoX_Peripheral/inc/xhw_wdt.h" type="1"/>
-    <File name="cmsis_boot/stm32f10x.h" path="cmsis_boot/stm32f10x.h" type="1"/>
-    <File name="cmsis_boot/stm32f10x_conf.h" path="cmsis_boot/stm32f10x_conf.h" type="1"/>
-    <File name="CoX/CoX_Peripheral/inc/xhw_ints.h" path="CoX/CoX_Peripheral/inc/xhw_ints.h" type="1"/>
-    <File name="CoX/CoX_Peripheral/inc/xsysctl.h" path="CoX/CoX_Peripheral/inc/xsysctl.h" type="1"/>
-    <File name="CoX/CoX_Peripheral/inc" path="" type="2"/>
-    <File name="CoX/CoX_Peripheral/inc/xhw_adc.h" path="CoX/CoX_Peripheral/inc/xhw_adc.h" type="1"/>
-    <File name="cmsis/core_cm3.c" path="cmsis/core_cm3.c" type="1"/>
-    <File name="CoX/CoX_Peripheral/inc/xhw_i2c.h" path="CoX/CoX_Peripheral/inc/xhw_i2c.h" type="1"/>
-    <File name="CoX/CoX_Peripheral/inc/xhw_types.h" path="CoX/CoX_Peripheral/inc/xhw_types.h" type="1"/>
-    <File name="stm_lib/src/stm32f10x_usart.c" path="stm_lib/src/stm32f10x_usart.c" type="1"/>
-    <File name="CoX/CoX_Peripheral/inc/xhw_nvic.h" path="CoX/CoX_Peripheral/inc/xhw_nvic.h" type="1"/>
-    <File name="CoX/CoX_Peripheral/inc/xhw_gpio.h" path="CoX/CoX_Peripheral/inc/xhw_gpio.h" type="1"/>
-    <File name="stdio/printf.c" path="stdio/printf.c" type="1"/>
-    <File name="animation/animation.h" path="anumation/animation.h" type="1"/>
-    <File name="stm_lib/src/stm32f10x_gpio.c" path="stm_lib/src/stm32f10x_gpio.c" type="1"/>
-    <File name="servo_controll" path="" type="2"/>
-    <File name="stm_lib/inc/stm32f10x_gpio.h" path="stm_lib/inc/stm32f10x_gpio.h" type="1"/>
-    <File name="CoX/CoX_Peripheral/inc/xhw_timer.h" path="CoX/CoX_Peripheral/inc/xhw_timer.h" type="1"/>
-    <File name="stm_lib/inc/stm32f10x_usart.h" path="stm_lib/inc/stm32f10x_usart.h" type="1"/>
     <File name="servo_controll/servo_controll.h" path="servo_controll/servo_controll.h" type="1"/>
+    <File name="cmsis_boot/startup/startup_stm32f10x_md_vl.c" path="cmsis_boot/startup/startup_stm32f10x_md_vl.c" type="1"/>
     <File name="cmsis_boot/system_stm32f10x.c" path="cmsis_boot/system_stm32f10x.c" type="1"/>
-    <File name="stdio" path="" type="2"/>
-    <File name="CoX/CoX_Peripheral/src/xgpio.c" path="CoX/CoX_Peripheral/src/xgpio.c" type="1"/>
+    <File name="stm_lib/inc/stm32f10x_tim.h" path="stm_lib/inc/stm32f10x_tim.h" type="1"/>
     <File name="cmsis/core_cm3.h" path="cmsis/core_cm3.h" type="1"/>
+    <File name="cmsis_boot" path="" type="2"/>
     <File name="stm_lib/src/stm32f10x_exti.c" path="stm_lib/src/stm32f10x_exti.c" type="1"/>
     <File name="stm_lib/src/stm32f10x_rcc.c" path="stm_lib/src/stm32f10x_rcc.c" type="1"/>
+    <File name="servo_controll/servo_controll.c" path="servo_controll/servo_controll.c" type="1"/>
+    <File name="stm_lib/src/stm32f10x_tim.c" path="stm_lib/src/stm32f10x_tim.c" type="1"/>
     <File name="animation" path="" type="2"/>
+    <File name="cmsis_boot/startup" path="" type="2"/>
     <File name="animation/animation.c" path="anumation/animation.c" type="1"/>
-    <File name="CoX" path="" type="2"/>
+    <File name="common.h" path="common.h" type="1"/>
+    <File name="stm_lib/src/stm32f10x_spi.c" path="stm_lib/src/stm32f10x_spi.c" type="1"/>
+    <File name="cmsis_boot/stm32f10x.h" path="cmsis_boot/stm32f10x.h" type="1"/>
+    <File name="cmsis_boot/stm32f10x_conf.h" path="cmsis_boot/stm32f10x_conf.h" type="1"/>
     <File name="stm_lib/src" path="" type="2"/>
     <File name="cmsis" path="" type="2"/>
     <File name="stm_lib" path="" type="2"/>
-    <File name="CoX/CoX_Peripheral/inc/xhw_sysctl.h" path="CoX/CoX_Peripheral/inc/xhw_sysctl.h" type="1"/>
-    <File name="CoX/CoX_Peripheral/inc/xdebug.h" path="CoX/CoX_Peripheral/inc/xdebug.h" type="1"/>
+    <File name="cmsis/core_cm3.c" path="cmsis/core_cm3.c" type="1"/>
     <File name="stm_lib/inc/stm32f10x_exti.h" path="stm_lib/inc/stm32f10x_exti.h" type="1"/>
-    <File name="CoX/CoX_Peripheral/src/xdebug.c" path="CoX/CoX_Peripheral/src/xdebug.c" type="1"/>
-    <File name="CoX/CoX_Peripheral/inc/xhw_dma.h" path="CoX/CoX_Peripheral/inc/xhw_dma.h" type="1"/>
+    <File name="stm_lib/inc/stm32f10x_spi.h" path="stm_lib/inc/stm32f10x_spi.h" type="1"/>
     <File name="cmsis_boot/system_stm32f10x.h" path="cmsis_boot/system_stm32f10x.h" type="1"/>
     <File name="stm_lib/inc/stm32f10x_rcc.h" path="stm_lib/inc/stm32f10x_rcc.h" type="1"/>
-    <File name="stm_lib/src/stm32f10x_crc.c" path="stm_lib/src/stm32f10x_crc.c" type="1"/>
-    <File name="CoX/CoX_Peripheral/inc/xcore.h" path="CoX/CoX_Peripheral/inc/xcore.h" type="1"/>
-    <File name="CoX/CoX_Peripheral/src/xsysctl.c" path="CoX/CoX_Peripheral/src/xsysctl.c" type="1"/>
-    <File name="CoX/CoX_Peripheral" path="" type="2"/>
+    <File name="stm_lib/src/stm32f10x_usart.c" path="stm_lib/src/stm32f10x_usart.c" type="1"/>
+    <File name="animation/animation.h" path="anumation/animation.h" type="1"/>
+    <File name="stm_lib/src/stm32f10x_gpio.c" path="stm_lib/src/stm32f10x_gpio.c" type="1"/>
     <File name="stm_lib/inc" path="" type="2"/>
-    <File name="CoX/CoX_Peripheral/inc/xhw_memmap.h" path="CoX/CoX_Peripheral/inc/xhw_memmap.h" type="1"/>
-    <File name="stm_lib/inc/stm32f10x_crc.h" path="stm_lib/inc/stm32f10x_crc.h" type="1"/>
-    <File name="CoX/CoX_Peripheral/inc/xhw_uart.h" path="CoX/CoX_Peripheral/inc/xhw_uart.h" type="1"/>
+    <File name="servo_controll" path="" type="2"/>
+    <File name="stm_lib/inc/stm32f10x_gpio.h" path="stm_lib/inc/stm32f10x_gpio.h" type="1"/>
     <File name="main.c" path="main.c" type="1"/>
-    <File name="CoX/CoX_Peripheral/inc/xhw_rtc.h" path="CoX/CoX_Peripheral/inc/xhw_rtc.h" type="1"/>
+    <File name="stm_lib/inc/stm32f10x_usart.h" path="stm_lib/inc/stm32f10x_usart.h" type="1"/>
   </Files>
 </Project>

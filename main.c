@@ -11,6 +11,7 @@
 #include "anumation/animation.h"
 #include "servo_controll/servo_controll.h"
 #include "common.h"
+#include "stm32f10x_spi.h"
 
 
 //Буфер для приёма сообщения UART2.
@@ -91,50 +92,120 @@ void init_usart(void)
     NVIC_SetPriority(USART2_IRQn, 0);
 }
 
+void delay(uint32_t i)
+{
+    volatile uint32_t j;
+    for (j=0; j!= i * 1000; j++);
+}
+
+
+void init_SPI1()
+{
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB | RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO | RCC_APB2Periph_SPI1, ENABLE);
+
+    GPIO_InitTypeDef GPIO_InitStructure;
+    SPI_InitTypeDef SPI_InitStructure;
+    SPI_StructInit(&SPI_InitStructure);
+
+    //NSS вход выбор чипа
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOA , &GPIO_InitStructure);
+
+    //CLK
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+    //MISO
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+    //MOSI
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+    GPIO_PinRemapConfig(GPIO_Remap_SPI1, ENABLE);
+
+    //Заполняем структуру с параметрами SPI модуля
+    SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex; //полный дуплекс
+    SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b; // передаем по 8 бит
+    SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low; // Полярность и
+    SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge; // фаза тактового сигнала
+    SPI_InitStructure.SPI_NSS = SPI_NSS_Hard; // Управлять состоянием сигнала NSS аппаратно
+    SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_2; // Предделитель SCK
+    SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB; // Первым отправляется старший бит
+    SPI_InitStructure.SPI_Mode = SPI_Mode_Slave; // Режим - слейв
+    SPI_Init(SPI1, &SPI_InitStructure); //Настраиваем SPI1
+
+    SPI_Cmd(SPI1, ENABLE); // Включаем модуль SPI1....
+
+    SPI_I2S_ITConfig(SPI1, SPI_I2S_IT_RXNE, ENABLE); //Включаем прерывание по приему байта
+    NVIC_EnableIRQ(SPI1_IRQn); //Разрешаем прерывания от SPI1
+
+}
+
+//Обработчик прерываний от SPI1
+void SPI1_IRQHandler (void)
+{
+    uint8_t data = SPI_I2S_ReceiveData(SPI1);
+    data = data;
+}
+
+
 int main(void)
 {
-	//инициализация анимации.
-	//InitServosAnimations(&animations);
+    //инициализация анимации.
+    //InitServosAnimations(&animations);
 
 
-	//Инициализируем UART
+    //Инициализируем UART
     init_usart();
+
+    //инициализация SPI1
+    init_SPI1();
 
     init_servo_data(&servos_data);
 
     //настройка пределов
 
     struct GroupSettings g0 = {0, 0.02, 240,
-    		{{0.00039,0.00242,},
-    		{0.00048, 0.0025},
-    		{0.00048, 0.00249},
-    		{0.0004, 0.00242}}};
+            {{0.00039,0.00242,},
+            {0.00048, 0.0025},
+            {0.00048, 0.00249},
+            {0.0004, 0.00242}}};
 
     set_servo_range(&servos_data, &g0);
 
     struct GroupSettings g1 = {1, 0.02, 240,
-    		{{0.00053,0.00255},
-    		{0.000449,0.00244},
-    		{0.00048,0.0025},
-    		{0.000459, 0.00248}}};
+            {{0.00053,0.00255},
+            {0.000449,0.00244},
+            {0.00048,0.0025},
+            {0.000459, 0.00248}}};
     set_servo_range(&servos_data, &g1);
 
     struct GroupSettings g2 = {2, 0.02, 240,
-    		{{0.000440, 0.002480},
-    		{0.000440, 0.002440},
-    		{0.000510, 0.002460},
-    		{0.000480,  0.002500}}};
+            {{0.000440, 0.002480},
+            {0.000440, 0.002440},
+            {0.000510, 0.002460},
+            {0.000480,  0.002500}}};
     set_servo_range(&servos_data, &g2);
 
     struct GroupSettings g3 = {3, 0.02, 240,
-    		{{0.00048, 0.0025},
-    		{0.00048, 0.00249},
-    		{0.000449, 0.00243},
-    		{0.00047, 0.0025}}};
+            {{0.00048, 0.0025},
+            {0.00048, 0.00249},
+            {0.000449, 0.00243},
+            {0.00047, 0.0025}}};
     set_servo_range(&servos_data, &g3);
 
     //Глобальное включение прерывания
-	SysTick_Config(SystemCoreClock/50);
+    SysTick_Config(SystemCoreClock/50);
     __enable_irq();
 
 
@@ -151,8 +222,41 @@ int main(void)
     GPIO_SetBits(GPIOB, GPIO_Pin_10 | GPIO_Pin_11);
     */
 
+    GPIO_InitTypeDef PORT;
+    //Включаем порты А и С
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC , ENABLE);
+    //Настраиваем ноги PC8 и PC9 на выход. Там у нас висят светодиоды
+    PORT.GPIO_Pin = GPIO_Pin_0;
+    PORT.GPIO_Mode = GPIO_Mode_AIN;
+    PORT.GPIO_Speed = GPIO_Speed_2MHz;
+    GPIO_Init(GPIOC , &PORT);
 
-	while(1)
+    RCC_APB2PeriphClockCmd(RCC_APB2ENR_ADC1EN, ENABLE); //Включаем тактирование АЦП
+    ADC1->CR2 |= ADC_CR2_CAL; //Запуск калибровки АЦП
+    while (!(ADC1->CR2 & ADC_CR2_CAL));
+    //Ожидаем окончания калибровки
+    ADC1->SMPR2 |= (ADC_SMPR2_SMP1_2 | ADC_SMPR2_SMP1_1 | ADC_SMPR2_SMP1_0); //Задаем
+    // длительность выборки
+    ADC1->CR2 |= ADC_CR2_JEXTSEL; //Преобразование инжектированной группы
+    //запустится установкой бита JSWSTART
+    ADC1->CR2 |= ADC_CR2_JEXTTRIG; //Разрешаем внешний запуск инжектированной группы
+    ADC1->CR2 |= ADC_CR2_CONT; //Преобразования запускаются одно за другим
+    ADC1->CR1 |= ADC_CR1_JAUTO; //Разрешить преобразование инжектированной группы
+    //после регулярной. Не понятно зачем, но без этого не работает
+    ADC1->JSQR |= (10<<15); //Задаем номер канала (выбран ADC1)
+    ADC1->CR2 |= ADC_CR2_ADON;//Теперь включаем АЦП
+    ADC1->CR2 |= ADC_CR2_JSWSTART; //Запуск преобразований
+    while (!(ADC1->SR & ADC_SR_JEOC)); //ждем пока первое преобразование завершится
+    //Теперь можно читать результат из JDR1
+    uint32_t adc_res; //Использовал переменную для отладки. Можно и без неё
+
+    while(1)
+    {
+        adc_res=ADC1->JDR1;
+        delay(adc_res);
+    }
+
+    while(1)
     {}
 }
 
@@ -228,7 +332,7 @@ void USART2_IRQHandler (void)
         USART_ClearITPendingBit(USART2, USART_IT_RXNE);
 
         uart2_rx_buf[uart2_rx_bit] = uart_data;
-        uart2_rx_bit++;
+                                                                                                  ++;
 
         //завершение приёма пакета
         if ( (uart2_rx_buf[0] + 2) == uart2_rx_bit )
@@ -236,74 +340,74 @@ void USART2_IRQHandler (void)
             uart2_rx_bit = 0;
 
             switch (uart2_rx_buf[1])
-			{
-            	//эхо
-				case CMD_ECHO:
-				{
-					break;
-				}
-				//установка позиции.
-				case CMD_SET_SEVO_POS:
-				{
-					if ( uart2_rx_buf[0]  == sizeof(struct ServoPosData))
-						uart2_rx_buf[2] = set_servo_angle(&servos_data, (struct ServoPosData *)&uart2_rx_buf[2]);
-					else
-						uart2_rx_buf[2] = WRONG_CMD_PACKET_SIZE;
+            {
+                //эхо
+                case CMD_ECHO:
+                {
+                    break;
+                }
+                //установка позиции.
+                case CMD_SET_SEVO_POS:
+                {
+                    if ( uart2_rx_buf[0]  == sizeof(struct ServoPosData))
+                        uart2_rx_buf[2] = set_servo_angle(&servos_data, (struct ServoPosData *)&uart2_rx_buf[2]);
+                    else
+                        uart2_rx_buf[2] = WRONG_CMD_PACKET_SIZE;
 
-					uart2_rx_buf[0] = 1;
-					break;
-				}
-				case CMD_SET_SEVOS_RANGES:
-				{
-					if ( uart2_rx_buf[0] == sizeof(struct GroupSettings))
-						uart2_rx_buf[2] = set_servo_range(&servos_data, (struct GroupSettings *)&uart2_rx_buf[2]);
-					else
-						uart2_rx_buf[2] = WRONG_CMD_PACKET_SIZE;
+                    uart2_rx_buf[0] = 1;
+                    break;
+                }
+                case CMD_SET_SEVOS_RANGES:
+                {
+                    if ( uart2_rx_buf[0] == sizeof(struct GroupSettings))
+                        uart2_rx_buf[2] = set_servo_range(&servos_data, (struct GroupSettings *)&uart2_rx_buf[2]);
+                    else
+                        uart2_rx_buf[2] = WRONG_CMD_PACKET_SIZE;
 
-					uart2_rx_buf[0] = 1;
-					break;
-				}
-				case CMD_ADD_ANIMATION:
-				{
-					uart2_rx_buf[0] = 1;
-					uart2_rx_buf[2] = NOT_IMPLEMENTED;
-					break;
-				}
-				case CMD_CLEAR_ANIMATION:
-				{
-					uart2_rx_buf[0] = 1;
-					uart2_rx_buf[2] = NOT_IMPLEMENTED;
-					break;
-				}
-				case CMD_START_ANIMATIONS:
-				{
-					uart2_rx_buf[0] = 1;
-					uart2_rx_buf[2] = NOT_IMPLEMENTED;
-					break;
-				}
-				case CMD_STOP_ANIMATIONS:
-				{
-					uart2_rx_buf[0] = 1;
-					uart2_rx_buf[2] = NOT_IMPLEMENTED;
-					break;
-				}
-				case CMD_GET_SEVOS_RANGES:
-				{
-					uart2_rx_buf[0] = 1;
+                    uart2_rx_buf[0] = 1;
+                    break;
+                }
+                case CMD_ADD_ANIMATION:
+                {
+                    uart2_rx_buf[0] = 1;
+                    uart2_rx_buf[2] = NOT_IMPLEMENTED;
+                    break;
+                }
+                case CMD_CLEAR_ANIMATION:
+                {
+                    uart2_rx_buf[0] = 1;
+                    uart2_rx_buf[2] = NOT_IMPLEMENTED;
+                    break;
+                }
+                case CMD_START_ANIMATIONS:
+                {
+                    uart2_rx_buf[0] = 1;
+                    uart2_rx_buf[2] = NOT_IMPLEMENTED;
+                    break;
+                }
+                case CMD_STOP_ANIMATIONS:
+                {
+                    uart2_rx_buf[0] = 1;
+                    uart2_rx_buf[2] = NOT_IMPLEMENTED;
+                    break;
+                }
+                case CMD_GET_SEVOS_RANGES:
+                {
+                    uart2_rx_buf[0] = 1;
 
-					if ( uart2_rx_buf[0] == sizeof(uint8_t) )
-					{
-						uart2_rx_buf[2] = get_servo_range(&servos_data,
-															*((uint8_t *)&uart2_rx_buf[2]),
-															(struct GroupSettings *)&uart2_rx_buf[3]);
-						if ( uart2_rx_buf[2] == 0 )
-							uart2_rx_buf[0] = 1 + sizeof(struct GroupSettings);
-					}
-					else
-						uart2_rx_buf[2] = WRONG_CMD_PACKET_SIZE;
-					break;
-				}
-			}
+                    if ( uart2_rx_buf[0] == sizeof(uint8_t) )
+                    {
+                        uart2_rx_buf[2] = get_servo_range(&servos_data,
+                                                            *((uint8_t *)&uart2_rx_buf[2]),
+                                                            (struct GroupSettings *)&uart2_rx_buf[3]);
+                        if ( uart2_rx_buf[2] == 0 )
+                            uart2_rx_buf[0] = 1 + sizeof(struct GroupSettings);
+                    }
+                    else
+                        uart2_rx_buf[2] = WRONG_CMD_PACKET_SIZE;
+                    break;
+                }
+            }
             send_buffer(uart2_rx_buf[0] + 2, uart2_rx_buf);
         }
     }
@@ -311,24 +415,24 @@ void USART2_IRQHandler (void)
 
 void SysTick_Handler(void)
 {
-	return;
+    return;
 
-	struct ServoPosData spd;
-	spd.group_id = 0;
+    struct ServoPosData spd;
+    spd.group_id = 0;
     spd.number = 0;
-	static float angle = 0.0;
-	float len =  0.3f;
-	float d_len = (1.f - len) / 2.f;
+    static float angle = 0.0;
+    float len =  0.3f;
+    float d_len = (1.f - len) / 2.f;
 
-	spd.value = (cos(angle) + 1.0) / 2.0 * len + d_len;
-	angle = angle + 0.05;
+    spd.value = (cos(angle) + 1.0) / 2.0 * len + d_len;
+    angle = angle + 0.05;
 
-	for (; spd.group_id < GROUPS_COUNT; spd.group_id++ )
-	{
-     	spd.number = 0;
-		for (; spd.number < SERVOS_COUNT_IN_GROUP; spd.number++ )
-		{
-			set_servo_angle(&servos_data, &spd);
-		}
-	}
+    for (; spd.group_id < GROUPS_COUNT; spd.group_id++ )
+    {
+         spd.number = 0;
+        for (; spd.number < SERVOS_COUNT_IN_GROUP; spd.number++ )
+        {
+            set_servo_angle(&servos_data, &spd);
+        }
+    }
 }

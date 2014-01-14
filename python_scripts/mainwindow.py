@@ -189,11 +189,13 @@ class MainWindow(QtGui.QMainWindow):
 
     @pyqtSlot('double')
     def on_spinBox_max_time_valueChanged(self, value):
+        print "on_spinBox_max_time_valueChanged(value:{0})".format(value)
         if value < self.get_max_animation_time():
             value = self.get_max_animation_time()
             self.spinBox_max_time.setValue(value)
         
         self.spinBox_cur_time.setMaximum(value)
+        self.time_window_size = value
 
         if self.checkBox_enable_auto_save.isChecked():
             self.on_action_save_triggered(True)
@@ -262,9 +264,9 @@ class MainWindow(QtGui.QMainWindow):
             self.doubleSpinBox_speed.setValue(data["speed"])
             self.doubleSpinBox_speed.blockSignals(state)
             
-            state = self.spinBox_max_time.blockSignals(True)
+            #state = self.spinBox_max_time.blockSignals(True)
             self.spinBox_max_time.setValue(data["max_time"])
-            self.spinBox_max_time.blockSignals(state)
+            #self.spinBox_max_time.blockSignals(state)
 
             self.listWidget.clear()
             
