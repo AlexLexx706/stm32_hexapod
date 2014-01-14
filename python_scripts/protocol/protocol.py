@@ -26,7 +26,7 @@ class Protocol:
         return struct.unpack("<B", self.serial.read(3)[2:])[0]
     
     def set_group_params(self, group_id, period, resolution, ranges):
-        data = struct.pack("<BfB", group_id, period, resolution) + "".join([struct.pack("<ff", r[0], r[1]) for r in ranges])
+        data = struct.pack("<BfH", group_id, period, resolution) + "".join([struct.pack("<ff", r[0], r[1]) for r in ranges])
         self.serial.write(struct.pack("<BB", len(data), self.CMD_SET_SEVOS_RANGES) + data)
         return struct.unpack("<B", self.serial.read(3)[2:])[0]
 
@@ -39,8 +39,8 @@ class Protocol:
         if size == 1:
             return None
         else:
-            res = list(struct.unpack("<BfB", data[1: 7]))
-            data = data[7:]
+            res = list(struct.unpack("<BfH", data[1: 8]))
+            data = data[8:]
             res.append([struct.unpack("<ff", data[i * 8: i * 8 + 8]) for i in range(4)])
             return res
 
@@ -54,12 +54,12 @@ if __name__ == '__main__':
     p = Protocol()
     
     while 1:
-        #print p.echo("1234")
-        #time.sleep(2)
-        #print p.move_servo(0,0,0.3)
-        #time.sleep(2)
-        #print p.set_group_params(0, 150., 223, [[0,1], [0.8, 3],[0,1],[0,1]])
-        #time.sleep(2)
+        print "echo: ", p.echo("1234")
+        time.sleep(2)
+        print "move_servo: ", p.move_servo(0,0,0.3)
+        time.sleep(2)
+        print "set_group_params: ", p.set_group_params(0, 150., 223, [[0,1], [0.8, 3],[0,1],[0,1]])
+        time.sleep(2)
         params = p.get_group_params(1)
-        print p.set_group_params(*params)
+        print "get_group_params, set_group_params: ", p.set_group_params(*params)
         time.sleep(2)

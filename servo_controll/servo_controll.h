@@ -7,23 +7,23 @@
 
 struct ServoData
 {
-	//минимальное время, значение в отсчётах с учётом прескеллера
-	float min_time;
+    //минимальное время, значение в отсчётах с учётом прескеллера
+    float min_time;
 
-	//минимальное время, значение в отсчётах с учётом прескеллера
-	float max_time;
+    //минимальное время, значение в отсчётах с учётом прескеллера
+    float max_time;
 
-	//текущее значение сервы
-	float cur_time;
+    //текущее значение сервы
+    float cur_time;
 
-	//значение для таймера
-	uint16_t timer_value;
+    //значение для таймера
+    uint16_t timer_value;
 };
 
 struct GroupData
 {
-	//индекс таймера.
-	uint8_t timer_id;
+    //индекс таймера.
+    uint8_t timer_id;
 
     //переод шима
     float period;
@@ -34,7 +34,7 @@ struct GroupData
     uint16_t resolution;
 
 
-	//настройки сервы.
+    //настройки сервы.
     struct ServoData servos[SERVOS_COUNT_IN_GROUP];
 };
 
@@ -42,7 +42,7 @@ struct GroupData
 //общая настройка групп
 struct GroupsData
 {
-	struct GroupData group[GROUPS_COUNT];
+    struct GroupData group[GROUPS_COUNT];
 };
 
 struct ServoRange
@@ -59,8 +59,8 @@ struct ServoRange
 //настройки переделов
 struct GroupSettings
 {
-	//индекс таймера.
-	uint8_t group_id;
+    //индекс таймера.
+    uint8_t group_id;
 
     //переод шима
     float period;
@@ -68,21 +68,21 @@ struct GroupSettings
     //разрешение серв.
     uint8_t resolution;
 
-	//используется для передачи пределов
+    //используется для передачи пределов
     struct ServoRange ranges[SERVOS_COUNT_IN_GROUP];
 };
 
 //установка позиции
 struct ServoPosData
 {
-	//индекс таймера.
-	uint8_t group_id;
+    //индекс таймера.
+    uint8_t group_id;
 
-	//номер сервы.
-	uint8_t number;
+    //номер сервы.
+    uint8_t number;
 
-	//значение угла, продел от 0.0 - 1.0
-	float value;
+    //значение угла, продел от 0.0 - 1.0
+    float value;
 };
 #pragma pack (pop)
 
