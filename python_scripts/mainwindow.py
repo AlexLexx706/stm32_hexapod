@@ -13,7 +13,7 @@ class MainWindow(QtGui.QMainWindow):
     def __init__(self, parent=None):
         super(QtGui.QWidget, self).__init__(parent)
         uic.loadUi("main_window.ui", self)
-        self.protocol = Protocol('com4')
+        self.protocol = Protocol(port_name="com6", baudrate=115200)
 
         self.config = json.loads(open("config.json", "rb").read())
 

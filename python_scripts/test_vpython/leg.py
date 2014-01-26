@@ -216,7 +216,7 @@ class Leg:
 
 def servo_process(cmd_queue):
     from protocol.protocol import Protocol
-    protocol = Protocol('com4')
+    protocol = Protocol('com8')
     
     while 1:
         cmd = cmd_queue.get()
